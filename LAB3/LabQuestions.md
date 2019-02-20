@@ -101,32 +101,46 @@ Also check the stack to verify that the samples are placed at the correct addres
 #define STACK_H 0x3E
 #define STACK_L 0x3D
 #define N_ALLOC 5
+#define DDRA 0x01
 #define PINA 0x00
 
 start:
-	call SUBROUTINE
-	rjmp start
+	call button_init
+	loop1:
+	call routine
+	rjmp loop1
 
-SUBROUTINE:
+routine:
+	//prologue
 	in r28, STACK_L ; Load low byte of stack pointer to r28
 	in r29, STACK_H ; Load high byte of stack pointer to r29
 	sbiw Y, N_ALLOC ; Subtract N_ALLOC from the loaded stack pointer
 	out STACK_L, r28 ;
 	out STACK_H, r29 ; Update stack pointer
 
-	ldi r20, 5
-	loop:
+	//subroutine
+	ldi r24, N_ALLOC
+	loop2:
 		in r18, PINA
 		and r19, r18
 		std Y+1, r19
-		dec r20
-	brne loop
+		adiw Y, 1
+		dec r24
+	brne loop2
 
+	//epilogue
 	in r28, STACK_L ; Load low byte of stack pointer to r28
 	in r29, STACK_H ; Load high byte of stack pointer to r29
 	adiw Y, N_ALLOC ; Add N_ALLOC to the loaded stack pointer
 	out STACK_L, r28
 	out STACK_H, r29
+ret
+
+button_init:
+	ldi r18, 0x00
+    in  r19, DDRA
+    or  r19, r18
+    out DDRB, r19
 ret
 ```
 _______________________________________________________________________________________________________________
