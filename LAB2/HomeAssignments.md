@@ -1,4 +1,4 @@
-# [#f03c15] Chapter 1
+# Chapter 1
 _______________________________________________________________________________________________________________
 ## 1.1
 The LEDs are connected to Port B. The address to the output register is as shown in Table 1.2.
