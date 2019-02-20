@@ -314,20 +314,26 @@ ________________________________________________________________________________
 # Chapter 4
 _______________________________________________________________________________________________________________
 ## 4.1
-sends a string to the OLED
+What does the code do?
+	Sends three strings to the OLED.
 _______________________________________________________________________________________________________________
 ## 4.2 
-No it does not
+Withoutrunning the code, does it seem like the functionhackedis ever called?
+	No it is never called.
 _______________________________________________________________________________________________________________
 ## 4.3
-It displays the string "H4ck3d" to the oled
+Run the code once, what happens?
+	It displays the string "H4ck3d" to the oled.
 _______________________________________________________________________________________________________________
 ## 4.4
-pointer moves from 0x40DF to 0x40D1 = 14 steps
+When calling thesecure_functionfunction, what will be pushed to the stack and at whichaddresses?
+	pointer moves from 0x40DF to 0x40D1 = 14 steps. Problem is that we only allocates 8 bytes but it seems to work anyways. 	We think that we write to memory that is not free.
 _______________________________________________________________________________________________________________
 ## 4.5
-r22 and r24
+At which addresses dostrcpycopy the last values? Is this correct? If not, is somethingoverwritten?
+	R22 and R24
 _______________________________________________________________________________________________________________
 ## 4.6
-We end up at hacked, which means this code is executed at the stack instead of secure function.
+As you exitstrcpyand executing theretinstruction insecure_function, what is the returnaddress? Where do we end up?
+	We end up at hacked, which means this code is executed at the stack instead of secure function.
 _______________________________________________________________________________________________________________
