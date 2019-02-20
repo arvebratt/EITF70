@@ -48,4 +48,8 @@ void lion_goes_in(){
 	}
 	//break
 }
+//read s1 s2 skriv poll
+//reg ligger på & 1<<sx = retunerar 1 eller 0
+
+//gör state för in eller ut
 ```
