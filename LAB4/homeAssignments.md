@@ -1,7 +1,6 @@
 ```
-#include <avr/io.h>
 #define F_CPU 16000000UL
-#include <util/delay.h>
+#include <avr/io.h>
 
 #define S1 PORTC6
 #define S2 PORTC7
@@ -18,58 +17,41 @@ int main(void)
 	led_init();
 
 	while (1){
-		lionStart(read_s1(), goesOut, goesIn, 1);
-		lionStart(read_s2(), goesIn, goesOut, 0);
-		lionMiddle(read_s1(), read_s2(), goesOut, middle, lions, 1);
-		lionMiddle(read_s2(), read_s1(), goesIn, middle, lions, 0);
+		//innan något har hänt, vilket håll går lejonet
+		if(read_s1() && (!goesOut || !goesIn)){
+			goesOut = 1;
+		}
+		if(read_s2() && (!goesOut || !goesIn)){
+			goesIn = 1;
+		}
 		
-	}
-}
-
-//function when lion starts its journey from the 
-//den to the wild zone or the other way around
-void lionStart(int read, int way1, int way2, int decider){
-	if (read && (!way1 || !way2))
-	{
-		if(decider == 1){
-			goesOut++;
-		} else{
-			goesIn++;
-		}
-		}
-}
-
-//function when lions are in the middle of their amazing journey
-//plus it lights on the LEDs for our debugging pleasure
-void lionMiddle(int read1, int read2, int way1, int way2, int lions, int decider){
-	if (way1)
-	{
-		if ((read1 && read2) || way2)
-		{
-			way2 = 1;
-			if (!read1)
-			{
-				led_toggle(lions);
-				if(decider == 1){
-					lions--;
-				} else{
+		if(goesOut){
+			if((read_s1() && read_s2()) || middle){
+				middle = 1;
+				if(!read_s2()){
+					led_toggle(lions);
 					lions++;
-				}
-				led_toggle(lions);
-				middle = 0;
-				if(decider == 1){
-					goesIn = 0;
-				} else{
+					led_toggle(lions);
+					middle = 0;
 					goesOut = 0;
+				}	
+			}
+		}
+
+		if(goesIn){
+			if((read_s1() && read_s2()) || middle){
+				middle = 1;
+				if(!read_s1()){
+					led_toggle(lions);
+					lions--;
+					led_toggle(lions);
+					middle = 0;
+					goesIn = 0;
 				}
 			}
 		}
 	}
-
 }
-
-
-
 
 //Dessa tre bör vara rätt
 void sensor_init(){
