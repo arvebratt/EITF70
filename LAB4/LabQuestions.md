@@ -78,3 +78,15 @@ int read_s1(){
 	return PINC & (1<<S1);
 }
 ```
+___________________________________________________________________________________________________________________________________
+## 1.4
+If a lion moves fast through the senors is it still registered? If not, why? Isn’t that a strange(r)
+thing(s)? Are there any limitations to consider while polling sensors?
+
+	No it does not seem to work, that is truly peculiar. One might say, it is indeed a strange(r) thing(s). 
+	Our solution would be to sampe more often. Isn't it a crazy fast moving wrld we live in?
+
+___________________________________________________________________________________________________________________________________
+# Chapter 2
+__________________________________________________________________________________________________________________________________
+
