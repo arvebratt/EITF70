@@ -88,3 +88,34 @@ void led_toggle(uint8_t check){
     PORTB ^= (1 << check);
 }
 ```
+__________________________________________________________________________________________________________________________________
+# Chapter 2
+__________________________________________________________________________________________________________________________________
+## 2.1
+Look on page 13 in the datasheet to see which PCINT (Pin Change Interrupt) the sensors are
+connected.
+	PC7 = PCINT23
+	PC6 = PCINT22
+__________________________________________________________________________________________________________________________________
+## 2.2
+Write code that enables the correct Pin Change Interrupt in the corresponding Pin Change
+Mask Register, PCMSK. See page 92, 93, 94 and 95 in the datasheet for the details.
+```
+#define interuptPins PCMSK2
+#define S1Interupt PCINT23
+#define S2Interupt PCINT22
+
+void interupt_init(){ 
+	SREG |= (1<<7); // Enables interrupts on the microcontroller 
+	PCICR |= (1<<PCIE2); // Since we have PCINT22/23, we use PCIE2 in PCICR to enable Pin change interrupt 
+	interuptPins |= (1<<S1Interupt)|(1<<S2Interupt); // Enable the pins 
+}
+```
+__________________________________________________________________________________________________________________________________
+## 2.3
+How do you enable the pin change interrupt for the corresponding port in the Pin Change
+Interrupt Control Register, PCICR? See page 90 in the datasheet.
+	
+	The code above is an example of how we do that on PCIE2.
+
+__________________________________________________________________________________________________________________________________
