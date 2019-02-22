@@ -1,3 +1,16 @@
+# Chapter 1
+_______________________________________________________________________________________________________________________________________
+## 1.1
+How do you initialize the used I/O-pins as inputs? The pins can be found on port C, use the
+schematic in Figure 2.
+```
+DDRC |= (0<<DDRC6) | (0<<DDRC7);
+```
+_______________________________________________________________________________________________________________________________________
+## 1.2
+Write code that polls the opto interrupters and counts the number of lions that are out in the
+wild zone.
+
 ```
 #define F_CPU 16000000UL
 #include <avr/io.h>
