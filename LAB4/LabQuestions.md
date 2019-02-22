@@ -89,4 +89,76 @@ thing(s)? Are there any limitations to consider while polling sensors?
 ___________________________________________________________________________________________________________________________________
 # Chapter 2
 __________________________________________________________________________________________________________________________________
+## 2.1
+What is the value of the variable?
+	
+	It is now 1.
+	
+	
+	
+```
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#define interuptPins PCMSK2
+#define S1Interupt PCINT23
+#define S2Interupt PCINT22
 
+volatile uint8_t lions;
+volatile int goesOut = 0;
+volatile int middle = 0;
+volatile int goesIn = 0;
+
+int main(void)
+{
+	//init
+	interupt_init();
+	sei();
+	security_system_init();
+	
+    while (1) 
+    {
+		// run security
+		security_system_run();
+    }
+}
+
+void interupt_init(){
+	PCICR |= (1<<PCIE2); // Since we have PCINT22/23, we use PCIE2 in PCICR to enable Pin change interrupt
+	interuptPins |= (1<<S1Interupt)|(1<<S2Interupt); // Enable the pins
+}
+
+ISR(PCINT2_vect){
+	//my cage code
+	
+	//before dawn when the lions sleeps tonight.....
+	if(/*read1 &&*/ !goesOut || !goesIn){
+		goesOut = 1;
+	}
+	if(/*read2 &&*/ !goesOut || !goesIn){
+		goesIn = 1;
+	}
+	
+	if(goesOut){
+		if(/*read båda ||*/ middle){
+			middle = 1;
+			if(/*!read2*/){
+				lions++;
+				middle = 0;
+				goesOut = 0;
+			}
+		}
+	}
+	if(goesIn){
+		if(/*read båda ||*/ middle){
+			middle = 1;
+			if(/*!read1*/){
+				lions++;
+				middle = 0;
+				goesIn = 0;
+			}
+		}
+	}
+	
+	send_lions(lions);
+}
+```
