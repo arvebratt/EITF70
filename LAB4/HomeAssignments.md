@@ -119,3 +119,8 @@ Interrupt Control Register, PCICR? See page 90 in the datasheet.
 	The code above is an example of how we do that on PCIE2.
 
 __________________________________________________________________________________________________________________________________
+## 2.4
+How do you enable the USART RX complete interrupt. For details please refer to the datasheet.
+```
+USCR0B |= (1<<RXCIE);
+```
