@@ -92,16 +92,18 @@ ________________________________________________________________________________
 ## 2.1
 What is the value of the variable?
 	
-	It is now 1.
-	
-	
-	
+	It is now 4, due to 4 states of the sensor.
+
+__________________________________________________________________________________________________________________________________
+## 2.2.2 Resolve the issue, part 2
 ```
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #define interuptPins PCMSK2
 #define S1Interupt PCINT23
 #define S2Interupt PCINT22
+#define S1 PORTC6
+#define S2 PORTC7
 
 volatile uint8_t lions;
 volatile int goesOut = 0;
@@ -115,11 +117,11 @@ int main(void)
 	sei();
 	security_system_init();
 	
-    while (1) 
-    {
+	while (1)
+	{
 		// run security
 		security_system_run();
-    }
+	}
 }
 
 void interupt_init(){
@@ -127,38 +129,64 @@ void interupt_init(){
 	interuptPins |= (1<<S1Interupt)|(1<<S2Interupt); // Enable the pins
 }
 
+
+int read_s1(){
+	return PINC & (1<<S1);
+}
+int read_s2(){
+	return PINC & (1<<S2);
+}
+
+
 ISR(PCINT2_vect){
-	//my cage code
-	
-	//before dawn when the lions sleeps tonight.....
-	if(/*read1 &&*/ !goesOut || !goesIn){
+	//innan något har hänt, vilket håll går lejonet
+	if(read_s1() && (!goesOut || !goesIn)){
 		goesOut = 1;
 	}
-	if(/*read2 &&*/ !goesOut || !goesIn){
+	if(read_s2() && (!goesOut || !goesIn)){
 		goesIn = 1;
 	}
-	
+
 	if(goesOut){
-		if(/*read båda ||*/ middle){
+		if((read_s1() && read_s2()) || middle){
 			middle = 1;
-			if(/*!read2*/){
+			if(!read_s2()){
 				lions++;
 				middle = 0;
 				goesOut = 0;
 			}
 		}
 	}
+
 	if(goesIn){
-		if(/*read båda ||*/ middle){
+		if((read_s1() && read_s2()) || middle){
 			middle = 1;
-			if(/*!read1*/){
-				lions++;
+			if(!read_s1()){
+				lions--;
 				middle = 0;
 				goesIn = 0;
 			}
 		}
 	}
-	
 	send_lions(lions);
 }
 ```
+__________________________________________________________________________________________________________________________________
+## 2.2
+Are there any disadvantages to consider while using interrupts? Can it be known which part
+of the code that is executed just before an interrupt?
+
+	Yes there are disadvantages. Since the interrupt jumps out of the code block the instance it gets interrupted some code might 		not be executed right. This example shows the problem.
+	
+```
+var x;
+x = x^2 * sin(x) + x;
+
+ISR(){
+	x = 0;
+}
+```
+	If the code gets interrupted while calculating x we get the value 0 which might not be what we are looking for.
+__________________________________________________________________________________________________________________________________
+## 2.2.3
+
